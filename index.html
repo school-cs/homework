@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>واجب منزلي – العمل على الصيغ</title>
+
+<style>
+body{
+  background:#eef3ff;
+  font-family:Tahoma;
+  padding:20px;
+  text-align:center;
+}
+
+.box{
+  background:#fff;
+  max-width:650px;
+  margin:auto;
+  padding:15px;
+  border-radius:12px;
+}
+
+input{
+  font-size:15px;
+  margin:4px;
+}
+
+.fx{
+  display:flex;
+  margin:10px 0;
+}
+.fx span{
+  background:#dde3ff;
+  padding:8px;
+}
+.fx input{
+  flex:1;
+  padding:8px;
+  direction:ltr;
+}
+
+/* الجدول */
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+th,td{
+  border:1px solid #999;
+  height:40px;
+}
+th{
+  background:#dde3ff;
+}
+.cell{
+  width:100%;
+  height:100%;
+  border:none;
+  text-align:center;
+  font-size:16px;
+}
+
+/* زر */
+button{
+  width:100%;
+  padding:12px;
+  background:#4CAF50;
+  border:none;
+  font-size:16px;
+  color:white;
+  border-radius:8px;
+  margin-top:10px;
+}
+
+/* تعليمات */
+.note{
+  margin-top:12px;
+  background:#f9f9ff;
+  padding:10px;
+  border:1px dashed #aaa;
+  text-align:right;
+}
+
+#msg{font-weight:bold;margin-top:8px;}
+.success{color:green}
+.error{color:red}
+
+/* شهادة */
+#cert{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  align-items:center;
+  justify-content:center;
+}
+#cert div{
+  background:#fff;
+  padding:20px;
+  border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h3>📘 واجب منزلي – العمل على الصيغ</h3>
+
+🏫 <input id="school" placeholder="اسم المدرسة"><br>
+👩‍🏫 <input id="teacher" placeholder="اسم المعلمة"><br>
+👩‍🎓 <input id="student" placeholder="اسم الطالبة"><br>
+
+<div class="fx">
+  <span>fx</span>
+  <input id="formula" placeholder="=A1+B1">
+</div>
+
+<table dir="ltr">
+<tr>
+  <th></th><th>A</th><th>B</th><th>C</th>
+</tr>
+
+<tr><th>1</th>
+<td><input id="A1" class="cell"></td>
+<td><input id="B1" class="cell"></td>
+<td><input id="C1" class="cell" readonly></td>
+</tr>
+
+<tr><th>2</th>
+<td><input id="A2" class="cell"></td>
+<td><input id="B2" class="cell"></td>
+<td><input id="C2" class="cell" readonly></td>
+</tr>
+
+<tr><th>3</th>
+<td><input id="A3" class="cell"></td>
+<td><input id="B3" class="cell"></td>
+<td><input id="C3" class="cell" readonly></td>
+</tr>
+
+<tr><th>4</th>
+<td><input id="A4" class="cell"></td>
+<td><input id="B4" class="cell"></td>
+<td><input id="C4" class="cell" readonly></td>
+</tr>
+
+<tr><th>5</th>
+<td><input id="A5" class="cell"></td>
+<td><input id="B5" class="cell"></td>
+<td><input id="C5" class="cell" readonly></td>
+</tr>
+</table>
+
+<button onclick="run()">✅ تنفيذ الصيغة</button>
+
+<div id="msg"></div>
+
+<div class="note">
+<b>طريقة كتابة الصيغة:</b><br>
+=A1+B1 جمع<br>
+=A2-B2 طرح<br>
+=A3*B3 ضرب<br>
+=A4/B4 قسمة
+</div>
+
+</div>
+
+<div id="cert">
+  <div>
+    <h2>🏅 شهادة شكر</h2>
+    <p id="cs"></p>
+    <p id="sc"></p>
+    <p id="tc"></p>
+  </div>
+</div>
+
+<script>
+let done=new Set();
+let words=["أحسنتِ 🌸","إجابة صحيحة ✅","رائع 👏","مبدعة 🌟"];
+
+function run(){
+  let f=formula.value.trim();
+  let m=f.match(/^=A([1-5])([\+\-\*\/])B\1$/);
+  if(!m){
+    msg.className="error";
+    msg.innerText="❌ الصيغة غير صحيحة";
+    return;
+  }
+
+  let r=m[1],op=m[2];
+  let a=+document.getElementById("A"+r).value;
+  let b=+document.getElementById("B"+r).value;
+
+  if(isNaN(a)||isNaN(b)){
+    msg.className="error";
+    msg.innerText="أدخلي الأرقام أولًا";
+    return;
+  }
+
+  let res;
+  if(op==="+")res=a+b;
+  if(op==="-")res=a-b;
+  if(op==="*")res=a*b;
+  if(op==="/"&&b!==0)res=a/b;
+
+  document.getElementById("C"+r).value=res;
+  done.add(r);
+
+  msg.className="success";
+  msg.innerText=words[Math.floor(Math.random()*words.length)];
+
+  if(done.size===5){
+    cs.innerText="الطالبة: "+student.value;
+    sc.innerText="المدرسة: "+school.value;
+    tc.innerText="المعلمة: "+teacher.value;
+    cert.style.display="flex";
+  }
+}
+</script>
+
+</body>
+</html>
